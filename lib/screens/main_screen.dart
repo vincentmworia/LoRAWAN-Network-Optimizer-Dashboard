@@ -4,14 +4,42 @@ import 'package:provider/provider.dart';
 
 import '../helpers/mqtt_api.dart';
 import '../models/app_info.dart';
-import '../models/lora_api.dart';
 import '../models/enum_my_pages.dart';
-import '../widgets/my_app_bar.dart';
 import '../providers/page_provider.dart';
+import '../providers/mqtt_provider.dart';
+import '../widgets/my_app_bar.dart';
 import '../widgets/nav_bar_buttons.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final mqttProvider = Provider.of<MqttProvider>(context, listen: false);
+    //   mqttProvider.initializeMqttClient();
+    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mqttProvider = context.read<MqttProvider>();
+      mqttProvider.initializeMqttClient(
+        deviceProviders: [
+          context.read<Device1Provider>(),
+          context.read<Device2Provider>(),
+          context.read<Device3Provider>(),
+          context.read<Device4Provider>(),
+          context.read<Device5Provider>(),
+          context.read<Device6Provider>(),
+        ],
+        timestampProvider: context.read<TimestampProvider>(),
+      );
+    });
+  }
 
   Consumer _navButton({
     required MyPage buttonPage,
@@ -22,7 +50,6 @@ class MainScreen extends StatelessWidget {
     builder: (ctx, pgProvider, child) => InkWell(
       onTap: () => pgProvider.setPage(buttonPage),
       hoverColor: AppInfo.opaquePrimaryColor(0.2),
-
       child: Container(
         width: navigationBarWidth,
         height: bnHeight,
@@ -32,10 +59,7 @@ class MainScreen extends StatelessWidget {
               : null,
           border: buttonPage == MyPage.home
               ? null
-              : Border.all(
-                  color: Colors.white70, // or any color you want
-                  width: 1, // thickness
-                ),
+              : Border.all(color: Colors.white70, width: 1),
         ),
         child: Tooltip(
           message: getPageString(buttonPage),
@@ -43,9 +67,7 @@ class MainScreen extends StatelessWidget {
           textStyle: const TextStyle(
             color: AppInfo.appPrimaryColor,
             fontSize: 15,
-            backgroundColor: Colors.transparent,
           ),
-          // padding: EdgeInsets.zero,
           child: child,
         ),
       ),
@@ -55,106 +77,129 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // todo - Data should be of Device 1 to Device 6, to replace the current data!!!
-    // final LoraApi loraData = LoraApi.fromMap(data);
-    //
-    // if (kDebugMode) {
-    //   print(loraData);
-    // }
-
     return SafeArea(
       child: Scaffold(
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            final appWidth = constraints.maxWidth;
-            final appHeight = constraints.maxHeight;
-            final navBarWidth = appWidth < 1850 ? 1850 * 0.04 : appWidth * 0.04;
-            final appBarHeight = appHeight < 850
-                ? 850 * 0.075
-                : appHeight * 0.075;
-
-            return (appHeight < 50)
-                ? Center()
-                : (appWidth < 650 || appHeight < 550)
-                ? Center(
-                    child: Text(
-                      "Dimensions of width and height of the app must be greater than (700,550Px). Current value: ($appWidth,${appHeight}Px)",
+        body: Consumer<MqttProvider>(
+          builder: (context, mqttProvider, _) {
+            if (mqttProvider.connectionStatus ==
+                ConnectionStatus.disconnected) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.cloud_off, size: 80, color: Colors.red),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Disconnected from MQTT Broker',
+                      style: TextStyle(fontSize: 20),
                     ),
-                  )
-                : Column(
-                    children: [
-                      Container(
-                        color: AppInfo.appPrimaryColor,
-                        width: appWidth,
-                        height: appBarHeight,
-                        child: MyAppBar(
-                          appBarHeight: appBarHeight,
-                          navigationBarWidth: navBarWidth,
-                          navButton: _navButton,
-                        ),
+                    const SizedBox(height: 10),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () {
+                        mqttProvider.initializeMqttClient(
+                          deviceProviders: [
+                            context.read<Device1Provider>(),
+                            context.read<Device2Provider>(),
+                            context.read<Device3Provider>(),
+                            context.read<Device4Provider>(),
+                            context.read<Device5Provider>(),
+                            context.read<Device6Provider>(),
+                          ],
+                          timestampProvider: context.read<TimestampProvider>(),
+                        );
+                      },
+                      child: const Text(
+                        'Retry',
+                        style: TextStyle(color: Colors.blue),
                       ),
-                      Expanded(
-                        child: SizedBox(
-                          width: appWidth,
-                          child: Row(
-                            children: [
-                              Container(
-                                color: AppInfo.opaquePrimaryColor(0.5),
-                                width: navBarWidth,
-                                child: NavBarButtons(
-                                  appBarHeight: appBarHeight,
-                                  navBarWidth: navBarWidth,
-                                  navButton: _navButton,
-                                ),
-                              ),
-                              Expanded(
-                                child: Consumer<PageProvider>(
-                                  builder: (ctx, pgProvider, _) =>
-                                      AnimatedSwitcher(
-                                        duration: const Duration(
-                                          milliseconds: 300,
-                                        ),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-                                        transitionBuilder:
-                                            (
-                                              Widget child,
-                                              Animation<double> animation,
-                                            ) => FadeTransition(
-                                              opacity: animation,
-                                              child: child,
-                                            ),
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final appWidth = constraints.maxWidth;
+                final appHeight = constraints.maxHeight;
+                final navBarWidth = appWidth < 1850
+                    ? 1850 * 0.04
+                    : appWidth * 0.04;
+                final appBarHeight = appHeight < 850
+                    ? 850 * 0.075
+                    : appHeight * 0.075;
 
-                                        child: Container(
-                                          key: ValueKey(pgProvider.currentPage),
-                                          alignment: Alignment.center,
-                                          // padding: const EdgeInsets.all(20),
-                                          child: SizedBox.expand(
-                                            child: getPageView(
-                                              pgProvider.currentPage,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          // height: appHeight*0.9,
-                        ),
+                if (appHeight < 50) return const Center();
+                if (appWidth < 650 || appHeight < 550) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Dimensions of width and height of the app must be greater than (700,550Px). Current value: ($appWidth,${appHeight}Px)",
                       ),
-                    ],
+                    ),
                   );
+                }
+
+                return Column(
+                  children: [
+                    Container(
+                      color: AppInfo.appPrimaryColor,
+                      width: appWidth,
+                      height: appBarHeight,
+                      child: MyAppBar(
+                        appBarHeight: appBarHeight,
+                        navigationBarWidth: navBarWidth,
+                        navButton: _navButton,
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Container(
+                            color: AppInfo.opaquePrimaryColor(0.5),
+                            width: navBarWidth,
+                            child: NavBarButtons(
+                              appBarHeight: appBarHeight,
+                              navBarWidth: navBarWidth,
+                              navButton: _navButton,
+                            ),
+                          ),
+                          Expanded(
+                            child: Consumer<PageProvider>(
+                              builder: (ctx, pgProvider, _) => AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                transitionBuilder:
+                                    (
+                                      Widget child,
+                                      Animation<double> animation,
+                                    ) => FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    ),
+                                child: Container(
+                                  key: ValueKey(pgProvider.currentPage),
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: SizedBox.expand(
+                                    child: getPageView(pgProvider.currentPage),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
       ),
     );
   }
 }
-
-// transitionBuilder: (child, anim) => SlideTransition(
-// position: Tween<Offset>(
-// begin: Offset(1, 0),
-// end: Offset.zero,
-// ).animate(anim),
-// child: FadeTransition(opacity: anim, child: child),
-// ),

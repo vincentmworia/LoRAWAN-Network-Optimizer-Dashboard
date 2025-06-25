@@ -1,10 +1,11 @@
 class RxMetadata {
-  String gatewayId;
-  String eui;
-  DateTime receivedAt;
-  num rssi;
-  num channelRssi;
-  num snr;
+  String? gatewayId;
+  String? eui;
+  DateTime? receivedAt;
+  num? rssi;
+  num? channelRssi;
+  num? snr;
+  String? frequencyOffset;
 
   RxMetadata({
     required this.gatewayId,
@@ -13,6 +14,7 @@ class RxMetadata {
     required this.rssi,
     required this.channelRssi,
     required this.snr,
+    required this.frequencyOffset,
   });
 
   static RxMetadata fromListOfMap(List list) => list
@@ -24,8 +26,18 @@ class RxMetadata {
           rssi: json['rssi'],
           channelRssi: json['channel_rssi'],
           snr: json['snr'],
+          frequencyOffset: json['frequency_offset'],
         ),
       )
-      .toList()
-      .firstWhere((e) => e.gatewayId == "kerlink001");
+      .toList()[0];
+
+  Map<String, dynamic> toMap() => {
+    "gateway_id": gatewayId!,
+    "eui": eui!,
+    "received_at": receivedAt!,
+    "rssi": rssi!,
+    "channel_rssi": channelRssi!,
+    "snr": snr!,
+    "frequency_offset": frequencyOffset!,
+  };
 }

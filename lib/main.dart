@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import './screens/main_screen.dart';
 import './models/app_info.dart';
 import './providers/page_provider.dart';
+import './providers/mqtt_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,23 +13,32 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: AppInfo.appTitle,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: AppInfo.appPrimaryColor,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppInfo.appPrimaryColor,
-          primary: AppInfo.appPrimaryColor,
-          secondary: AppInfo.appSecondaryColor,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PageProvider()),
+        ChangeNotifierProvider(create: (_) => MqttProvider()),
+        ChangeNotifierProvider(create: (_) => TimestampProvider()),
+        ChangeNotifierProvider(create: (_) => Device1Provider()),
+        ChangeNotifierProvider(create: (_) => Device2Provider()),
+        ChangeNotifierProvider(create: (_) => Device3Provider()),
+        ChangeNotifierProvider(create: (_) => Device4Provider()),
+        ChangeNotifierProvider(create: (_) => Device5Provider()),
+        ChangeNotifierProvider(create: (_) => Device6Provider()),
+      ],
+      child: MaterialApp(
+        title: AppInfo.appTitle,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: AppInfo.appPrimaryColor,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppInfo.appPrimaryColor,
+            primary: AppInfo.appPrimaryColor,
+            secondary: AppInfo.appSecondaryColor,
+          ),
         ),
-      ),
-      home: ChangeNotifierProvider(
-        create: (_) => PageProvider(),
-        child: MainScreen(),
+        home: const MainScreen(),
       ),
     );
   }

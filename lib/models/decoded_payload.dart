@@ -1,10 +1,10 @@
 class DecodedPayload {
-  num co2;
-  num humidity;
-  num packetCount;
-  num pm25;
-  num pressure;
-  num temperature;
+  num? co2;
+  num? humidity;
+  num? packetCount;
+  num? pm25;
+  num? pressure;
+  num? temperature;
 
   DecodedPayload({
     required this.co2,
@@ -23,4 +23,13 @@ class DecodedPayload {
     pressure: json['pressure'] as num,
     temperature: json['temperature'] as num,
   );
+
+  Map<String, dynamic> toMap() => {
+    "co2": co2!,
+    "humidity": humidity!,
+    "packetCount": packetCount!,
+    "pm25": pm25!,
+    "pressure": pressure!,
+    "temperature": temperature!,
+  };
 }

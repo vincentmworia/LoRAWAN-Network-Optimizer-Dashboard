@@ -42,7 +42,9 @@ class MyAppBar extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontSize: 30.0),
         ),
         Spacer(),
+        // todo a circle with a flashing when we have data update
         Padding(
+          // todo consume the current time with dash dash in case of null
           padding: EdgeInsets.only(right: navigationBarWidth / 4),
           child: Text(
             DateFormat('hh:mm:ss a').format(DateTime.now()),

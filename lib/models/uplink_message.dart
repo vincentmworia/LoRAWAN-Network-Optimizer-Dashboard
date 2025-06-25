@@ -3,14 +3,13 @@ import './rx_metadata.dart';
 import './settings.dart';
 
 class UplinkMessage {
-  String sessionKeyId;
-  int fPort;
-  int fCnt;
-  String frmPayload;
-  DecodedPayload decodedPayload;
-  RxMetadata rxMetadata;
-  Settings settings;
-  DateTime receivedAt;
+  String? sessionKeyId;
+  int? fPort;
+  int? fCnt;
+  String? frmPayload;
+  DecodedPayload? decodedPayload;
+  RxMetadata? rxMetadata;
+  Settings? settings;
 
   UplinkMessage({
     required this.sessionKeyId,
@@ -20,7 +19,6 @@ class UplinkMessage {
     required this.decodedPayload,
     required this.rxMetadata,
     required this.settings,
-    required this.receivedAt,
   });
 
   static UplinkMessage fromMap(Map<String, dynamic> json) => UplinkMessage(
@@ -30,7 +28,6 @@ class UplinkMessage {
     frmPayload: json['frm_payload'] as String,
     decodedPayload: DecodedPayload.fromMap(json['decoded_payload']),
     rxMetadata: RxMetadata.fromListOfMap(json['rx_metadata']),
-    settings: Settings.fromMap(json['settings']),
-    receivedAt: DateTime.parse(json['received_at']),
+    settings: Settings.fromMap(json['settings']['data_rate']['lora']),
   );
 }
