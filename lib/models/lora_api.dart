@@ -17,6 +17,7 @@ class LoraApi {
     required this.uplinkMessage,
   });
 
+  // todo Return API with the device name!!!! <From endDeviceId>
   static LoraApi fromMap(Map<String, dynamic> json) => LoraApi(
     name: json['name'] as String,
     uniqueId: json['unique_id'] as String,

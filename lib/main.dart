@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './screens/main_screen.dart';
+import './models/app_info.dart';
+import './providers/page_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,12 +16,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: AppInfo.appTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        primaryColor: AppInfo.appPrimaryColor,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppInfo.appPrimaryColor,
+          primary: AppInfo.appPrimaryColor,
+          secondary: AppInfo.appSecondaryColor,
+        ),
       ),
-      home: const MainScreen(),
+      home: ChangeNotifierProvider(
+        create: (_) => PageProvider(),
+        child: MainScreen(),
+      ),
     );
   }
 }

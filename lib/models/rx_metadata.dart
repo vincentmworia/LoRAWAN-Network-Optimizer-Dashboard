@@ -15,7 +15,7 @@ class RxMetadata {
     required this.snr,
   });
 
-  static List<RxMetadata> fromListOfMap(List list) => list
+  static RxMetadata fromListOfMap(List list) => list
       .map(
         (json) => RxMetadata(
           gatewayId: json['gateway_ids']['gateway_id'],
@@ -26,5 +26,6 @@ class RxMetadata {
           snr: json['snr'],
         ),
       )
-      .toList();
+      .toList()
+      .firstWhere((e) => e.gatewayId == "kerlink001");
 }

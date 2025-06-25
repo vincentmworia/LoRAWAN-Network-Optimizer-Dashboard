@@ -8,7 +8,7 @@ class UplinkMessage {
   int fCnt;
   String frmPayload;
   DecodedPayload decodedPayload;
-  List<RxMetadata> rxMetadata;
+  RxMetadata rxMetadata;
   Settings settings;
   DateTime receivedAt;
 
