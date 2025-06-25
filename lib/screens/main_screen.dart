@@ -87,7 +87,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.cloud_off, size: 80, color: Colors.red),
+                    const Icon(Icons.cloud_off, size: 80, color: AppInfo.appSecondaryColor),
                     const SizedBox(height: 20),
                     const Text(
                       'Disconnected from MQTT Broker',
@@ -112,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
                       },
                       child: const Text(
                         'Retry',
-                        style: TextStyle(color: Colors.blue),
+                        style: TextStyle(color: AppInfo.appPrimaryColor),
                       ),
                     ),
                   ],
