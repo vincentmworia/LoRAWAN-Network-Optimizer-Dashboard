@@ -87,7 +87,11 @@ class _MainScreenState extends State<MainScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.cloud_off, size: 80, color: AppInfo.appSecondaryColor),
+                    const Icon(
+                      Icons.cloud_off,
+                      size: 80,
+                      color: AppInfo.appSecondaryColor,
+                    ),
                     const SizedBox(height: 20),
                     const Text(
                       'Disconnected from MQTT Broker',
@@ -132,12 +136,12 @@ class _MainScreenState extends State<MainScreen> {
                     : appHeight * 0.075;
 
                 if (appHeight < 50) return const Center();
-                if (appWidth < 650 || appHeight < 550) {
+                if (appWidth < 600 || appHeight < 550) {
                   return Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "Dimensions of width and height of the app must be greater than (700,550Px). Current value: ($appWidth,${appHeight}Px)",
+                        "Dimensions of width and height of the app must be greater than (600,550Px). Current value: ($appWidth,${appHeight}Px)",
                       ),
                     ),
                   );
@@ -159,7 +163,7 @@ class _MainScreenState extends State<MainScreen> {
                       child: Row(
                         children: [
                           Container(
-                            color: AppInfo.opaquePrimaryColor(0.5),
+                            color: AppInfo.opaquePrimaryColor(0.65),
                             width: navBarWidth,
                             child: NavBarButtons(
                               appBarHeight: appBarHeight,
@@ -170,7 +174,7 @@ class _MainScreenState extends State<MainScreen> {
                           Expanded(
                             child: Consumer<PageProvider>(
                               builder: (ctx, pgProvider, _) => AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 500),
                                 transitionBuilder:
                                     (
                                       Widget child,
@@ -182,7 +186,7 @@ class _MainScreenState extends State<MainScreen> {
                                 child: Container(
                                   key: ValueKey(pgProvider.currentPage),
                                   alignment: Alignment.center,
-                                  padding: const EdgeInsets.all(20.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: SizedBox.expand(
                                     child: getPageView(pgProvider.currentPage),
                                   ),

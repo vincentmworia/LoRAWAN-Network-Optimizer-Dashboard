@@ -16,8 +16,8 @@ class Settings {
   );
 
   Map<String, dynamic> toMap() => {
-    "bandwidth": bandwidth!,
-    "spreading_factor": spreadingFactor!,
-    "coding_rate": codingRate!,
+    "bandwidth": bandwidth,
+    "spreading_factor": spreadingFactor,
+    "coding_rate": codingRate,
   };
 }

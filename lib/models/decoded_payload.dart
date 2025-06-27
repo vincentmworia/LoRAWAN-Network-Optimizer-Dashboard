@@ -6,6 +6,9 @@ class DecodedPayload {
   num? pressure;
   num? temperature;
 
+  // todo predict from tensorflow
+  // num get pathLoss=>0.0;
+
   DecodedPayload({
     required this.co2,
     required this.humidity,
@@ -25,11 +28,11 @@ class DecodedPayload {
   );
 
   Map<String, dynamic> toMap() => {
-    "co2": co2!,
-    "humidity": humidity!,
-    "packetCount": packetCount!,
-    "pm25": pm25!,
-    "pressure": pressure!,
-    "temperature": temperature!,
+    "co2": co2,
+    "humidity": humidity,
+    "packetCount": packetCount,
+    "pm25": pm25,
+    "pressure": pressure,
+    "temperature": temperature,
   };
 }

@@ -32,19 +32,19 @@ class LoraApi {
   );
 
   Map<String, dynamic> toMap() => {
-    "end_device_ids": endDeviceId!,
-    "received_at": receivedAt!.toIso8601String(),
+    "end_device_ids": endDeviceId,
+    "received_at": receivedAt?.toIso8601String(),
     "uplink_message": {
-      "session_key_id": uplinkMessage!.sessionKeyId!,
-      "f_port": uplinkMessage!.fPort!,
-      "f_cnt": uplinkMessage!.fCnt!,
-      "frm_payload": uplinkMessage!.frmPayload!,
-      "decoded_payload": uplinkMessage!.decodedPayload!.toMap(),
-      "rx_metadata": uplinkMessage!.rxMetadata!.toMap(),
+      "session_key_id": uplinkMessage?.sessionKeyId!,
+      "f_port": uplinkMessage?.fPort,
+      "f_cnt": uplinkMessage?.fCnt,
+      "frm_payload": uplinkMessage?.frmPayload!,
+      "decoded_payload": uplinkMessage?.decodedPayload?.toMap(),
+      "rx_metadata": uplinkMessage?.rxMetadata?.toMap(),
       "settings": {
-        "bandwidth": uplinkMessage!.settings!.bandwidth!,
-        "spreading_factor": uplinkMessage!.settings!.spreadingFactor!,
-        "coding_rate": uplinkMessage!.settings!.codingRate!,
+        "bandwidth": uplinkMessage?.settings?.bandwidth,
+        "spreading_factor": uplinkMessage?.settings?.spreadingFactor!,
+        "coding_rate": uplinkMessage?.settings?.codingRate!,
       },
     },
   };

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lorawan/providers/mqtt_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_info.dart';
@@ -25,6 +26,7 @@ class MyAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -35,20 +37,43 @@ class MyAppBar extends StatelessWidget {
           navigationBarWidth: navigationBarWidth,
           buttonPage: MyPage.home,
         ),
-
+        SizedBox(width: navigationBarWidth * 3),
         Spacer(),
+        if (deviceWidth>900)
         Text(
           AppInfo.appTitle,
           style: TextStyle(color: Colors.white, fontSize: 30.0),
         ),
         Spacer(),
-        // todo a circle with a flashing when we have data update
         Padding(
-          // todo consume the current time with dash dash in case of null
           padding: EdgeInsets.only(right: navigationBarWidth / 4),
-          child: Text(
-            DateFormat('hh:mm:ss a').format(DateTime.now()),
-            style: TextStyle(color: Colors.white, fontSize: 25.0),
+          child: Consumer<TimestampProvider>(
+            builder: (_, timestampProvider, __) {
+              final time = timestampProvider.lastUpdated;
+              final isFlashing = timestampProvider.justUpdated;
+
+              return Row(
+                children: [
+
+                  Text(
+                    DateFormat('hh:mm:ss a').format(time ?? DateTime.now()),
+                    style: const TextStyle(color: Colors.white, fontSize: 25.0),
+                  ),
+                  SizedBox(width: navigationBarWidth / 4),
+                  Container(
+                    // duration: const Duration(milliseconds: 300),
+                    width: 15,
+                    height: 15,
+                    decoration: BoxDecoration(
+                      color: isFlashing ? Colors.red : Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white),
+                    ),
+                    margin: const EdgeInsets.only(right: 12),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ],

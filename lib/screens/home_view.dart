@@ -9,40 +9,27 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceConsumers = const [
+      _DeviceConsumer<Device1Provider>(title: 'Device 1'),
+      _DeviceConsumer<Device2Provider>(title: 'Device 2'),
+      _DeviceConsumer<Device3Provider>(title: 'Device 3'),
+      _DeviceConsumer<Device4Provider>(title: 'Device 4'),
+      _DeviceConsumer<Device5Provider>(title: 'Device 5'),
+      _DeviceConsumer<Device6Provider>(title: 'Device 6'),
+    ];
+
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: Row(
-              children: const [
-                Expanded(
-                  child: _DeviceConsumer<Device1Provider>(title: 'Device 1'),
-                ),
-                Expanded(
-                  child: _DeviceConsumer<Device2Provider>(title: 'Device 2'),
-                ),
-                Expanded(
-                  child: _DeviceConsumer<Device3Provider>(title: 'Device 3'),
-                ),
-              ],
-            ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Wrap(
+            spacing: width / 30,
+            runSpacing: width / 30,
+            children: deviceConsumers,
           ),
-          Expanded(
-            child: Row(
-              children: const [
-                Expanded(
-                  child: _DeviceConsumer<Device4Provider>(title: 'Device 4'),
-                ),
-                Expanded(
-                  child: _DeviceConsumer<Device5Provider>(title: 'Device 5'),
-                ),
-                Expanded(
-                  child: _DeviceConsumer<Device6Provider>(title: 'Device 6'),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -55,9 +42,20 @@ class _DeviceConsumer<T extends DeviceProvider> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Consumer<T>(
-      builder: (_, provider, _) =>
-          DeviceCard(title: title, data: provider.deviceData),
+      builder: (_, dvProvider, _) => SizedBox(
+        width:
+            width /
+            (width < 800
+                ? 1.5
+                : width < 1000
+                ? 2
+                : width < 1450
+                ? 3
+                : 4),
+        child: DeviceCard(title: title, deviceProvider: dvProvider),
+      ),
     );
   }
 }

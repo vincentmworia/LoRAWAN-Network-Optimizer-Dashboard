@@ -32,12 +32,12 @@ class RxMetadata {
       .toList()[0];
 
   Map<String, dynamic> toMap() => {
-    "gateway_id": gatewayId!,
-    "eui": eui!,
-    "received_at": receivedAt!,
-    "rssi": rssi!,
-    "channel_rssi": channelRssi!,
-    "snr": snr!,
-    "frequency_offset": frequencyOffset!,
+    "gateway_id": gatewayId,
+    "eui": eui,
+    "received_at": receivedAt,
+    "rssi": rssi,
+    "channel_rssi": channelRssi,
+    "snr": snr,
+    "frequency_offset": frequencyOffset,
   };
 }

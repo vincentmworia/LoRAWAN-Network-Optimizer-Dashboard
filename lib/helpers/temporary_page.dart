@@ -9,9 +9,6 @@ class TemporaryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppInfo.opaqueColor(Colors.yellow, 0.5),
-      child: Center(child: Text(pageTitle)),
-    );
+    return Center(child: Text(pageTitle,style: TextStyle(fontSize: 30),),);
   }
 }
