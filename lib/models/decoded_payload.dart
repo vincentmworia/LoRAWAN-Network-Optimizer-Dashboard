@@ -6,9 +6,6 @@ class DecodedPayload {
   num? pressure;
   num? temperature;
 
-  // todo predict from tensorflow
-  // num get pathLoss=>0.0;
-
   DecodedPayload({
     required this.co2,
     required this.humidity,

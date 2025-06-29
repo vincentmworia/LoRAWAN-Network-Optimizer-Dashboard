@@ -14,17 +14,6 @@ class LoraApi {
     required this.uplinkMessage,
   });
 
-  // todo set the values of distance, cwalls and wwalls of the different instances; update in the providers in MQTT or here?
-  // void setDistance(int val) {
-  //   distance = val;
-  // }
-  // void setCWalls(int val) {
-  //   cWalls = val;
-  // }
-  // void setWWalls(int val) {
-  //   wWalls = val;
-  // }
-
   static LoraApi fromMap(Map<String, dynamic> json) => LoraApi(
     receivedAt: DateTime.parse(json['received_at']),
     endDeviceId: json['end_device_ids']['device_id'] as String,
@@ -45,6 +34,7 @@ class LoraApi {
         "bandwidth": uplinkMessage?.settings?.bandwidth,
         "spreading_factor": uplinkMessage?.settings?.spreadingFactor!,
         "coding_rate": uplinkMessage?.settings?.codingRate!,
+        "frequency": uplinkMessage?.settings?.frequency!,
       },
     },
   };

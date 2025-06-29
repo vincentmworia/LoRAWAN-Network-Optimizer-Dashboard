@@ -28,6 +28,6 @@ class UplinkMessage {
     frmPayload: json['frm_payload'] as String,
     decodedPayload: DecodedPayload.fromMap(json['decoded_payload']),
     rxMetadata: RxMetadata.fromListOfMap(json['rx_metadata']),
-    settings: Settings.fromMap(json['settings']['data_rate']['lora']),
+    settings: Settings.fromMap(json['settings']),
   );
 }

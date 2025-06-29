@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../helpers/temporary_page.dart';
+import '../providers/device_provider.dart';
+import './device_screen.dart';
 
 class Device1View extends StatelessWidget {
   const Device1View({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return TemporaryPage("Device 1 View");
+    return const DeviceScreen<Device1Provider>(deviceName: "Device 1");
   }
 }

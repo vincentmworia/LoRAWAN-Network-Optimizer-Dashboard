@@ -1,14 +1,15 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lorawan/screens/disconnected_view.dart';
 import 'package:provider/provider.dart';
 
-import '../helpers/mqtt_api.dart';
 import '../models/app_info.dart';
 import '../models/enum_my_pages.dart';
 import '../providers/page_provider.dart';
 import '../providers/mqtt_provider.dart';
 import '../widgets/my_app_bar.dart';
-import '../widgets/nav_bar_buttons.dart';
+import '../widgets/nav_bar_pane.dart';
+import '../providers/device_provider.dart';
+import '../providers/timestamp_provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -21,10 +22,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final mqttProvider = Provider.of<MqttProvider>(context, listen: false);
-    //   mqttProvider.initializeMqttClient();
-    // });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mqttProvider = context.read<MqttProvider>();
       mqttProvider.initializeMqttClient(
@@ -83,47 +80,8 @@ class _MainScreenState extends State<MainScreen> {
           builder: (context, mqttProvider, _) {
             if (mqttProvider.connectionStatus ==
                 ConnectionStatus.disconnected) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.cloud_off,
-                      size: 80,
-                      color: AppInfo.appSecondaryColor,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Disconnected from MQTT Broker',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 10),
-                    const CircularProgressIndicator(),
-                    const SizedBox(height: 20),
-                    TextButton(
-                      onPressed: () {
-                        mqttProvider.initializeMqttClient(
-                          deviceProviders: [
-                            context.read<Device1Provider>(),
-                            context.read<Device2Provider>(),
-                            context.read<Device3Provider>(),
-                            context.read<Device4Provider>(),
-                            context.read<Device5Provider>(),
-                            context.read<Device6Provider>(),
-                          ],
-                          timestampProvider: context.read<TimestampProvider>(),
-                        );
-                      },
-                      child: const Text(
-                        'Retry',
-                        style: TextStyle(color: AppInfo.appPrimaryColor),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              return DisconnectedView(mqttProvider: mqttProvider);
             }
-
             return LayoutBuilder(
               builder: (context, constraints) {
                 final appWidth = constraints.maxWidth;
@@ -146,7 +104,6 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                   );
                 }
-
                 return Column(
                   children: [
                     Container(
@@ -162,14 +119,10 @@ class _MainScreenState extends State<MainScreen> {
                     Expanded(
                       child: Row(
                         children: [
-                          Container(
-                            color: AppInfo.opaquePrimaryColor(0.65),
-                            width: navBarWidth,
-                            child: NavBarButtons(
-                              appBarHeight: appBarHeight,
-                              navBarWidth: navBarWidth,
-                              navButton: _navButton,
-                            ),
+                          NavBarPane(
+                            appBarHeight: appBarHeight,
+                            navBarWidth: navBarWidth,
+                            navButton: _navButton,
                           ),
                           Expanded(
                             child: Consumer<PageProvider>(

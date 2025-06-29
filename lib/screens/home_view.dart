@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/mqtt_provider.dart';
 import '../widgets/device_card.dart';
+import '../models/enum_my_pages.dart';
+import '../providers/device_provider.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -10,12 +11,12 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceConsumers = const [
-      _DeviceConsumer<Device1Provider>(title: 'Device 1'),
-      _DeviceConsumer<Device2Provider>(title: 'Device 2'),
-      _DeviceConsumer<Device3Provider>(title: 'Device 3'),
-      _DeviceConsumer<Device4Provider>(title: 'Device 4'),
-      _DeviceConsumer<Device5Provider>(title: 'Device 5'),
-      _DeviceConsumer<Device6Provider>(title: 'Device 6'),
+      _DeviceConsumer<Device1Provider>(title: PageNameString.device1),
+      _DeviceConsumer<Device2Provider>(title: PageNameString.device2),
+      _DeviceConsumer<Device3Provider>(title: PageNameString.device3),
+      _DeviceConsumer<Device4Provider>(title: PageNameString.device4),
+      _DeviceConsumer<Device5Provider>(title: PageNameString.device5),
+      _DeviceConsumer<Device6Provider>(title: PageNameString.device6),
     ];
 
     final width = MediaQuery.of(context).size.width;
@@ -25,8 +26,8 @@ class HomeView extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Center(
           child: Wrap(
-            spacing: width / 30,
-            runSpacing: width / 30,
+            spacing: width / 50,
+            runSpacing: width / 50,
             children: deviceConsumers,
           ),
         ),
@@ -53,7 +54,7 @@ class _DeviceConsumer<T extends DeviceProvider> extends StatelessWidget {
                 ? 2
                 : width < 1450
                 ? 3
-                : 4),
+                : 3.6),
         child: DeviceCard(title: title, deviceProvider: dvProvider),
       ),
     );

@@ -5,6 +5,8 @@ import './screens/main_screen.dart';
 import './models/app_info.dart';
 import './providers/page_provider.dart';
 import './providers/mqtt_provider.dart';
+import '../providers/device_provider.dart';
+import '../providers/timestamp_provider.dart';
 
 void main() {
   runApp(const MyApp());

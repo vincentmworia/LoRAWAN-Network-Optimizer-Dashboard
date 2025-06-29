@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:lorawan/providers/mqtt_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
+import '../providers/timestamp_provider.dart';
 import '../models/app_info.dart';
 import '../models/enum_my_pages.dart';
 
@@ -39,11 +39,11 @@ class MyAppBar extends StatelessWidget {
         ),
         SizedBox(width: navigationBarWidth * 3),
         Spacer(),
-        if (deviceWidth>900)
-        Text(
-          AppInfo.appTitle,
-          style: TextStyle(color: Colors.white, fontSize: 30.0),
-        ),
+        if (deviceWidth > 900)
+          Text(
+            AppInfo.appTitle,
+            style: TextStyle(color: Colors.white, fontSize: 30.0),
+          ),
         Spacer(),
         Padding(
           padding: EdgeInsets.only(right: navigationBarWidth / 4),
@@ -54,7 +54,6 @@ class MyAppBar extends StatelessWidget {
 
               return Row(
                 children: [
-
                   Text(
                     DateFormat('hh:mm:ss a').format(time ?? DateTime.now()),
                     style: const TextStyle(color: Colors.white, fontSize: 25.0),

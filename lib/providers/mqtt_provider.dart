@@ -8,6 +8,8 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 import '../private_info.dart';
 import '../models/lora_api.dart';
+import './device_provider.dart';
+import './timestamp_provider.dart';
 
 enum ConnectionStatus { disconnected, connected }
 
@@ -72,29 +74,26 @@ class MqttProvider with ChangeNotifier {
           recMess.payload.message,
         );
 
-        // try {
-        final loraApi = LoraApi.fromMap(json.decode(message));
-        final deviceId = loraApi.endDeviceId;
+        try {
+          final loraApi = LoraApi.fromMap(json.decode(message));
+          final deviceId = loraApi.endDeviceId;
 
-        print(loraApi.toMap());
-
-        final deviceMap = {
-          'pilotdevice': deviceProviders[0],
-          'pilotdevice01': deviceProviders[1],
-          'pilotdevice02': deviceProviders[2],
-          'pilotdevice03': deviceProviders[3],
-          'pilotdevice04': deviceProviders[4],
-          'pilotdevice05': deviceProviders[5],
-        };
-        if (deviceMap.containsKey(deviceId)) {
-          // todo distance, cwalls and wwalls info is there <From UI, but with default values>?
-          // todo  Other info is there calculate the path loss from tensor flow model. Convert .pkl to tflite and link the model to flutter. In the meantime, dash it.
-          deviceMap[deviceId]?.updateData(loraApi);
-          timestampProvider.updateTime(loraApi.receivedAt ?? DateTime.now());
+          final deviceMap = {
+            'pilotdevice': deviceProviders[0],
+            'pilotdevice01': deviceProviders[1],
+            'pilotdevice02': deviceProviders[2],
+            'pilotdevice03': deviceProviders[3],
+            'pilotdevice04': deviceProviders[4],
+            'pilotdevice05': deviceProviders[5],
+          };
+          if (deviceMap.containsKey(deviceId)) {
+            deviceMap[deviceId]?.updateData(loraApi);
+            timestampProvider.updateTime(loraApi.receivedAt ?? DateTime.now());
+          }
+        } catch (e) {
+          // todo throw error on the UI???
+          if (kDebugMode) print("JSON Decode Error: $e");
         }
-        // } catch (e) {
-        //   if (kDebugMode) print("JSON Decode Error: $e");
-        // }
       });
     } else {
       _connStatus = ConnectionStatus.disconnected;
@@ -151,78 +150,3 @@ class MqttProvider with ChangeNotifier {
     super.dispose();
   }
 }
-
-class TimestampProvider with ChangeNotifier {
-  DateTime? _lastUpdated;
-  bool _justUpdated = false;
-
-  DateTime? get lastUpdated => _lastUpdated;
-
-  bool get justUpdated => _justUpdated;
-
-  void updateTime(DateTime? timestamp) {
-    _lastUpdated = timestamp;
-    _justUpdated = true;
-    notifyListeners();
-
-    Future.delayed(const Duration(seconds: 1), () {
-      _justUpdated = false;
-      notifyListeners();
-    });
-  }
-}
-
-class DeviceProvider with ChangeNotifier {
-  LoraApi? _deviceData;
-
-  LoraApi? get deviceData => _deviceData;
-
-  num? _pathLoss;
-  num _distance = 5;
-  num _cWalls = 6;
-  num _wWalls = 7;
-
-  num? get pathLoss => _pathLoss;
-
-  num get distance => _distance;
-
-  num get cWalls => _cWalls;
-
-  num get wWalls => _wWalls;
-
-  // todo This will change the static parameters at runtime, but reset when we restart the app
-  void setDistance(int newDistance) {
-    _distance = newDistance;
-    notifyListeners();
-  }
-
-  void setCWalls(int newCWalls) {
-    _cWalls = newCWalls;
-    notifyListeners();
-  }
-
-  void setWWalls(int newWWalls) {
-    _wWalls = newWWalls;
-    notifyListeners();
-  }
-
-  void updateData(LoraApi newData) {
-    // todo If all data is present,  calculate path loss using the data;
-    // todo Use a function, that can be utilized when simulation in the simulation page
-
-    _deviceData = newData;
-    notifyListeners();
-  }
-}
-
-class Device1Provider extends DeviceProvider {}
-
-class Device2Provider extends DeviceProvider {}
-
-class Device3Provider extends DeviceProvider {}
-
-class Device4Provider extends DeviceProvider {}
-
-class Device5Provider extends DeviceProvider {}
-
-class Device6Provider extends DeviceProvider {}
