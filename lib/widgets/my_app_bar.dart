@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../providers/timestamp_provider.dart';
 import '../models/app_info.dart';
-import '../models/enum_my_pages.dart';
+import '../enum/enum_my_pages.dart';
 
 class MyAppBar extends StatelessWidget {
   const MyAppBar({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppInfo {
-  static const appTitle = "Lorawan Network Optimizer";
+  static const appTitle = "LoRaWAN Network Optimizer";
   static const appPrimaryColor = Color(0xff003865);
   static const appSecondaryColor = Color(0xff009688);
 

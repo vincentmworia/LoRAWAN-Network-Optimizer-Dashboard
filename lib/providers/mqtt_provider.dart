@@ -74,7 +74,7 @@ class MqttProvider with ChangeNotifier {
           recMess.payload.message,
         );
 
-        try {
+        // try {
           final loraApi = LoraApi.fromMap(json.decode(message));
           final deviceId = loraApi.endDeviceId;
 
@@ -90,10 +90,10 @@ class MqttProvider with ChangeNotifier {
             deviceMap[deviceId]?.updateData(loraApi);
             timestampProvider.updateTime(loraApi.receivedAt ?? DateTime.now());
           }
-        } catch (e) {
-          // todo throw error on the UI???
-          if (kDebugMode) print("JSON Decode Error: $e");
-        }
+        // } catch (e) {
+        //   todo throw error on the UI???
+        //   if (kDebugMode) print("JSON Decode Error: $e");
+        // }
       });
     } else {
       _connStatus = ConnectionStatus.disconnected;

@@ -2,9 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../models/app_info.dart';
-import '../models/decoded_payload.dart';
-
-enum ChartMetric { pathLoss, temperature, co2 }
+import '../enum/enum_chart_metrics.dart';
+import '../providers/device_provider.dart';
 
 class _ChartData {
   final String time;
@@ -14,14 +13,9 @@ class _ChartData {
 }
 
 class DeviceScreenChartView extends StatefulWidget {
-  const DeviceScreenChartView({
-    super.key,
-    required this.pathLoss,
-    required this.decodedPayload,
-  });
+  const DeviceScreenChartView(this.provider, {super.key});
 
-  final DecodedPayload? decodedPayload;
-  final num? pathLoss;
+  final DeviceProvider provider;
 
   @override
   State<DeviceScreenChartView> createState() => _DeviceScreenChartViewState();
@@ -30,38 +24,56 @@ class DeviceScreenChartView extends StatefulWidget {
 class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
   ChartMetric _selectedMetric = ChartMetric.pathLoss;
 
-  List<_ChartData> _generateDummyGraph(num? latest) {
-    final base = latest?.toDouble() ?? 90.0;
-    return List.generate(10, (i) => _ChartData("T-\$i", base + i * 0.5));
+  List<_ChartData> _convertToChartData(List<MetricEntry> entries) {
+    return entries.map((entry) {
+      return _ChartData(
+        '${entry.timestamp.hour}:${entry.timestamp.minute.toString().padLeft(2, '0')}',
+        entry.value?.toDouble() ?? 0,
+      );
+    }).toList();
   }
 
-  List<_ChartData> getMetricData() {
+  List<_ChartData> getMetricData(DeviceProvider provider) {
     switch (_selectedMetric) {
       case ChartMetric.temperature:
-        return _generateDummyGraph(widget.decodedPayload?.temperature);
+        return _convertToChartData(provider.temperatureHistory);
+      case ChartMetric.humidity:
+        return _convertToChartData(provider.humidityHistory);
       case ChartMetric.co2:
-        return _generateDummyGraph(widget.decodedPayload?.co2);
+        return _convertToChartData(provider.co2History);
+      case ChartMetric.pm25:
+        return _convertToChartData(provider.pm25History);
+      case ChartMetric.pressure:
+        return _convertToChartData(provider.pressureHistory);
+      case ChartMetric.snr:
+        return _convertToChartData(provider.snrHistory);
+      case ChartMetric.rssi:
+        return _convertToChartData(provider.rssiHistory);
+      case ChartMetric.sf:
+        return _convertToChartData(provider.sfHistory);
+      case ChartMetric.bw:
+        return _convertToChartData(provider.bwHistory);
+      case ChartMetric.freq:
+        return _convertToChartData(provider.freqHistory);
       case ChartMetric.pathLoss:
-        return _generateDummyGraph(widget.pathLoss);
-    }
-  }
-
-  String getMetricTitle() {
-    switch (_selectedMetric) {
-      case ChartMetric.temperature:
-        return "Temperature (°C)";
-      case ChartMetric.co2:
-        return "CO₂ (ppm)";
-      case ChartMetric.pathLoss:
-        return "Path Loss (dB)";
+        return _convertToChartData(provider.pathLossHistory);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final chartData = getMetricData(widget.provider);
+
+    final yValues = chartData.map((e) => e.value);
+    final minY = yValues.isEmpty
+        ? 0.0
+        : yValues.reduce((a, b) => a < b ? a : b) - 1;
+    final maxY = yValues.isEmpty
+        ? 10.0
+        : yValues.reduce((a, b) => a > b ? a : b) + 1;
+
     return Column(
       children: [
-        /// Chart Metric + Dropdown
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 12),
           child: Row(
@@ -78,29 +90,15 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
               DropdownButton<ChartMetric>(
                 value: _selectedMetric,
                 style: TextStyle(color: AppInfo.appPrimaryColor),
+                underline: Container(height: 0),
                 focusColor: Colors.transparent,
-                // dropdownColor: Colors.white,
-                underline: Container(height: 1, color: Colors.transparent),
                 borderRadius: BorderRadius.circular(12),
-                // elevation: 8,
                 items: ChartMetric.values.map((metric) {
                   final isSelected = _selectedMetric == metric;
-
-                  String metricLabel(ChartMetric metric) {
-                    switch (metric) {
-                      case ChartMetric.pathLoss:
-                        return 'Path Loss';
-                      case ChartMetric.temperature:
-                        return 'Temperature';
-                      case ChartMetric.co2:
-                        return 'CO₂';
-                    }
-                  }
-
                   return DropdownMenuItem(
                     value: metric,
                     child: Text(
-                      metricLabel(metric),
+                      metric.label,
                       style: TextStyle(
                         color: isSelected
                             ? AppInfo.appSecondaryColor
@@ -113,7 +111,7 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                   );
                 }).toList(),
                 onChanged: (val) {
-                  if (val != null) {
+                  if (val != null && _selectedMetric != val) {
                     setState(() => _selectedMetric = val);
                   }
                 },
@@ -121,8 +119,6 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
             ],
           ),
         ),
-
-        /// Chart
         Card(
           elevation: 2,
           color: Colors.white,
@@ -138,7 +134,7 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                   vertical: 8,
                 ),
                 child: Text(
-                  getMetricTitle(),
+                  _selectedMetric.label,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -151,15 +147,13 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                   padding: const EdgeInsets.all(8.0),
                   child: LineChart(
                     LineChartData(
+                      minY: minY,
+                      maxY: maxY,
                       gridData: FlGridData(
                         show: true,
                         drawVerticalLine: true,
-                        horizontalInterval: 10,
+                        horizontalInterval: 1,
                         verticalInterval: 1,
-                        getDrawingHorizontalLine: (_) =>
-                            FlLine(color: Colors.grey.shade300, strokeWidth: 1),
-                        getDrawingVerticalLine: (_) =>
-                            FlLine(color: Colors.grey.shade300, strokeWidth: 1),
                       ),
                       titlesData: FlTitlesData(
                         bottomTitles: AxisTitles(
@@ -167,10 +161,11 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                             showTitles: true,
                             interval: 1,
                             getTitlesWidget: (value, _) {
-                              final data = getMetricData();
                               final i = value.toInt();
                               return Text(
-                                i >= 0 && i < data.length ? data[i].time : '',
+                                i >= 0 && i < chartData.length
+                                    ? chartData[i].time
+                                    : '',
                                 style: const TextStyle(fontSize: 10),
                               );
                             },
@@ -204,9 +199,8 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                       lineTouchData: LineTouchData(
                         touchTooltipData: LineTouchTooltipData(
                           getTooltipItems: (spots) {
-                            final data = getMetricData();
                             return spots.map((spot) {
-                              final label = data[spot.spotIndex].time;
+                              final label = chartData[spot.spotIndex].time;
                               return LineTooltipItem(
                                 '$label\n${spot.y.toStringAsFixed(2)}',
                                 const TextStyle(color: Colors.white),
@@ -217,7 +211,7 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                       ),
                       lineBarsData: [
                         LineChartBarData(
-                          spots: getMetricData()
+                          spots: chartData
                               .asMap()
                               .entries
                               .map(
@@ -225,7 +219,7 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                               )
                               .toList(),
                           isCurved: true,
-                          color: Colors.blueAccent,
+                          color: AppInfo.opaquePrimaryColor(0.6),
                           barWidth: 3,
                           isStrokeCapRound: true,
                           dotData: FlDotData(show: false),
@@ -234,8 +228,6 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                             gradient: LinearGradient(
                               colors: [
                                 AppInfo.opaquePrimaryColor(0.3),
-                                AppInfo.opaquePrimaryColor(0.3),
-                                // AppInfo.opaquePrimaryColor(0.2),
                                 Colors.transparent,
                               ],
                               begin: Alignment.topCenter,

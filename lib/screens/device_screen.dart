@@ -59,10 +59,7 @@ class DeviceScreen<T extends DeviceProvider> extends StatelessWidget {
                 const Divider(),
 
                 /// Charts
-                DeviceScreenChartView(
-                  pathLoss: pathLoss,
-                  decodedPayload: decodedPayload,
-                ),
+                DeviceScreenChartView(provider),
 
                 /// Adjust Obstacle Parameters
                 DeviceScreenAdjustObstacles(provider: provider),

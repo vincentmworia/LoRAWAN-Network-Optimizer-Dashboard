@@ -30,8 +30,8 @@ class DataLimits {
   static const bwMin = 125.0;
   static const bwMax = 500.0;
 
-  static const freqMin = 125.0;
-  static const freqMax = 500.0;
+  static const freqMin = 867.0; // MHz
+  static const freqMax = 869.0;
 
   static const pathLossMin = 0.0;
   static const pathLossMax = 500.0;

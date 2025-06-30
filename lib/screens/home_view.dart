@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/device_card.dart';
-import '../models/enum_my_pages.dart';
+import '../enum/enum_my_pages.dart';
 import '../providers/device_provider.dart';
 
 class HomeView extends StatelessWidget {

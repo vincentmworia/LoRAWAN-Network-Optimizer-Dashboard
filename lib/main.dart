@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import './screens/main_screen.dart';
+import './screens/login_screen.dart';
 import './models/app_info.dart';
 import './providers/page_provider.dart';
 import './providers/mqtt_provider.dart';
 import '../providers/device_provider.dart';
 import '../providers/timestamp_provider.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -40,7 +42,11 @@ class MyApp extends StatelessWidget {
             secondary: AppInfo.appSecondaryColor,
           ),
         ),
-        home: const MainScreen(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const LoginScreen(),
+          '/main': (context) => const MainScreen(),
+        },
       ),
     );
   }

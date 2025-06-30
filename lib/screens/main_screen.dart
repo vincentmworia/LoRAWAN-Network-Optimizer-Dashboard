@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lorawan/screens/disconnected_view.dart';
+import 'package:lorawan/widgets/device_small_info.dart';
+import 'package:lorawan/widgets/disconnected_view.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_info.dart';
-import '../models/enum_my_pages.dart';
+import '../enum/enum_my_pages.dart';
 import '../providers/page_provider.dart';
 import '../providers/mqtt_provider.dart';
 import '../widgets/my_app_bar.dart';
@@ -62,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
           message: getPageString(buttonPage),
           decoration: const BoxDecoration(color: Colors.transparent),
           textStyle: const TextStyle(
-            color: AppInfo.appPrimaryColor,
+            color: Colors.black,
             fontSize: 15,
           ),
           child: child,
@@ -95,14 +96,7 @@ class _MainScreenState extends State<MainScreen> {
 
                 if (appHeight < 50) return const Center();
                 if (appWidth < 600 || appHeight < 550) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Dimensions of width and height of the app must be greater than (600,550Px). Current value: ($appWidth,${appHeight}Px)",
-                      ),
-                    ),
-                  );
+                  return DeviceSmallInfo(appWidth: appWidth, appHeight: appHeight);
                 }
                 return Column(
                   children: [

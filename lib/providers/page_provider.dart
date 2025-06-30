@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/enum_my_pages.dart';
+import '../enum/enum_my_pages.dart';
 
 class PageProvider with ChangeNotifier {
   MyPage _currentPage = MyPage.home;
