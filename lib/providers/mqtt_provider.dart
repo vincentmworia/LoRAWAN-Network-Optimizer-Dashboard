@@ -76,6 +76,7 @@ class MqttProvider with ChangeNotifier {
 
         // try {
           final loraApi = LoraApi.fromMap(json.decode(message));
+          // print(json.decode(message));
           final deviceId = loraApi.endDeviceId;
 
           final deviceMap = {

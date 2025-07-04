@@ -1,9 +1,11 @@
 import 'dart:math';
 
 class PathLossComputation {
-  // todo later access data from tflite;
-  /// Formula from the paper
-  static num estimatePathLoss({
+  // todo later access data from machine learning model or local server;
+
+  static num estimatePathLossNahshon(num rssi) => 14 - 0.14 + 0.4 + 3 - rssi;
+
+  static num estimatePathLossVincent({
     required num distance, // meters
     required num cWalls, // number of concrete walls
     required num wWalls, // number of wooden walls

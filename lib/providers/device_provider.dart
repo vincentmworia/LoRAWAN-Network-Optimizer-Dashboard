@@ -76,17 +76,20 @@ class DeviceProvider with ChangeNotifier {
     final rxMetadata = _deviceData!.uplinkMessage!.rxMetadata!;
     final settings = _deviceData!.uplinkMessage!.settings!;
 
-    _pathLoss = PathLossComputation.estimatePathLoss(
+    /*_pathLoss = PathLossComputation.estimatePathLossVincent(
       distance: _distance,
       cWalls: _cWalls,
       wWalls: _wWalls,
-      co2: decodedPayload.co2!,
-      humidity: decodedPayload.humidity!,
-      pm25: decodedPayload.pm25!,
-      pressure: decodedPayload.pressure!,
-      temperature: decodedPayload.temperature!,
-      snr: rxMetadata.snr!,
-      frequency: num.parse(settings.frequency!),
+      co2: decodedPayload.co2 ?? 0,
+      humidity: decodedPayload.humidity ?? 0,
+      pm25: decodedPayload.pm25 ?? 0,
+      pressure: decodedPayload.pressure ?? 0,
+      temperature: decodedPayload.temperature ?? 0,
+      snr: rxMetadata.snr ?? 0,
+      frequency: num.parse(settings.frequency ?? '0'),
+    ); */
+    _pathLoss = PathLossComputation.estimatePathLossNahshon(
+      rxMetadata.rssi ?? 0.0,
     );
 
     final bandwidth = DeviceCard.freqCalculator(settings.bandwidth)!['value'];

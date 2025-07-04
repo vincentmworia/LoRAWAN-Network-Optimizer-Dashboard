@@ -43,6 +43,7 @@ dependencies:
   fl_chart: 1.0.0
   onnxruntime: ^1.4.1
   tflite_flutter: ^0.11.0
+  timezone: ^0.10.1
 dependency_overrides:
   fl_chart: 1.0.0
 dev_dependencies:

@@ -30,7 +30,7 @@ class _SimulationViewState extends State<SimulationView> {
 
   void _calculate() {
     if (_formKey.currentState?.validate() ?? false) {
-      final result = PathLossComputation.estimatePathLoss(
+      final result = PathLossComputation.estimatePathLossVincent(
         distance: double.parse(_controllers['distance']!.text),
         cWalls: int.parse(_controllers['cWalls']!.text),
         wWalls: int.parse(_controllers['wWalls']!.text),

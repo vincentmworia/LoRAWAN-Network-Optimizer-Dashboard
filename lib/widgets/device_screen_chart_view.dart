@@ -152,14 +152,15 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                       gridData: FlGridData(
                         show: true,
                         drawVerticalLine: true,
-                        horizontalInterval: 1,
-                        verticalInterval: 1,
+                        horizontalInterval: ((maxY - minY) / 10).ceilToDouble(), // Y-axis: ~5 horizontal lines
+                        verticalInterval: (chartData.length / 20).ceilToDouble(), // X-axis: ~6 vertical lines
                       ),
                       titlesData: FlTitlesData(
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            interval: 1,
+                            interval: (chartData.length / 20).ceilToDouble(),
+                            // interval: ,
                             getTitlesWidget: (value, _) {
                               final i = value.toInt();
                               return Text(
