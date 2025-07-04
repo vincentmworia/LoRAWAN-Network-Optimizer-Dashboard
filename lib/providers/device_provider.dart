@@ -70,6 +70,9 @@ class DeviceProvider with ChangeNotifier {
   }
 
   void updateData(LoraApi newData) {
+    // Prevent duplicate updates from MQTT (same timestamp = same packet)
+    if (_deviceData?.receivedAt == newData.receivedAt) return;
+
     _deviceData = newData;
 
     final decodedPayload = _deviceData!.uplinkMessage!.decodedPayload!;
@@ -107,7 +110,6 @@ class DeviceProvider with ChangeNotifier {
     _addEntry(rssiHistory, rxMetadata.rssi);
     _addEntry(sfHistory, settings.spreadingFactor);
     _addEntry(bwHistory, num.tryParse(bandwidth ?? '0'));
-
     _addEntry(freqHistory, num.tryParse(frequency ?? '0'));
 
     notifyListeners();

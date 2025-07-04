@@ -153,13 +153,13 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                         show: true,
                         drawVerticalLine: true,
                         horizontalInterval: ((maxY - minY) / 10).ceilToDouble(), // Y-axis: ~5 horizontal lines
-                        verticalInterval: (chartData.length / 20).ceilToDouble(), // X-axis: ~6 vertical lines
+                        verticalInterval: (chartData.length / 12).ceilToDouble(), // X-axis: ~6 vertical lines
                       ),
                       titlesData: FlTitlesData(
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            interval: (chartData.length / 20).ceilToDouble(),
+                            interval: (chartData.length / 12).ceilToDouble(),
                             // interval: ,
                             getTitlesWidget: (value, _) {
                               final i = value.toInt();
