@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../enum/enum_my_pages.dart';
 import '../providers/page_provider.dart';
-import '../models/app_info.dart';
+import '../helpers/app_info.dart';
 import '../models/data_limits.dart';
 import '../models/data_chips_info.dart';
 import '../providers/device_provider.dart';

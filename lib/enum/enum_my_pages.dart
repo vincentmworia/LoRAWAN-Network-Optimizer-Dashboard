@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lorawan/helpers/app_info.dart';
 
 import '../screens/home_view.dart';
 import '../screens/device_1_view.dart';
@@ -21,7 +22,7 @@ enum MyPage {
 }
 
 class PageNameString {
-  static const home = 'Home';
+  static const home = AppInfo.appTitle;
   static const device1 = 'Device 1';
   static const device2 = 'Device 2';
   static const device3 = 'Device 3';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/app_info.dart';
+import '../helpers/app_info.dart';
 import '../enum/enum_my_pages.dart';
 
 class NavBarPane extends StatelessWidget {

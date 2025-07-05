@@ -5,7 +5,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../providers/timestamp_provider.dart';
-import '../models/app_info.dart';
+import '../providers/page_provider.dart';
 import '../enum/enum_my_pages.dart';
 
 // Ensure timezone is initialized only once
@@ -54,10 +54,17 @@ class MyAppBar extends StatelessWidget {
         ),
         SizedBox(width: navigationBarWidth * 3),
         const Spacer(),
-        if (deviceWidth > 900)
-          Text(
-            AppInfo.appTitle,
-            style: const TextStyle(color: Colors.white, fontSize: 30.0),
+        if (deviceWidth > 1000)
+          Consumer<PageProvider>(
+            builder: (_, pgProvider, _) => Text(
+              getPageString(pgProvider.currentPage),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 30.0,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 3.0
+              ),
+            ),
           ),
         const Spacer(),
         Padding(

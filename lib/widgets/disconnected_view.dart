@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/mqtt_provider.dart';
 import '../providers/device_provider.dart';
-import '../models/app_info.dart';
+import '../helpers/app_info.dart';
 import '../providers/timestamp_provider.dart';
 
 class DisconnectedView extends StatelessWidget {

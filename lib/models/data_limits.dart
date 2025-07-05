@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './app_info.dart';
+import '../helpers/app_info.dart';
 
 class DataLimits {
   static const tempMin = 18.0;

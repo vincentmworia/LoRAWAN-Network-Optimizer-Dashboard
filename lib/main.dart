@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 import './screens/main_screen.dart';
 import './screens/login_screen.dart';
-import './models/app_info.dart';
+import 'helpers/app_info.dart';
 import './providers/page_provider.dart';
 import './providers/mqtt_provider.dart';
 import '../providers/device_provider.dart';
 import '../providers/timestamp_provider.dart';
 
-
 void main() {
   runApp(const MyApp());
+
+  /// Configure window (only works on Windows/Mac)
+  doWhenWindowReady(() {
+    appWindow.minSize = const Size(600, 550);
+    appWindow.alignment = Alignment.center;
+    appWindow.title = AppInfo.appTitle;
+    appWindow.maximize(); // 💥 Launch full screen
+    appWindow.show();
+  });
 }
 
 class MyApp extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/app_info.dart';
+import '../helpers/app_info.dart';
 import '../models/data_limits.dart';
 import '../helpers/path_loss_computation.dart';
 
@@ -93,7 +93,7 @@ class _SimulationViewState extends State<SimulationView> {
             child: Column(
               children: [
                 const Text(
-                  'Simulated Path Loss View',
+                  'Configure Simulation Parameters',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30.0,

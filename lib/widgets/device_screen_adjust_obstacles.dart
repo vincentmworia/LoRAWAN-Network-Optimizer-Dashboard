@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../providers/device_provider.dart';
 
-import '../models/app_info.dart';
+import '../helpers/app_info.dart';
 
 class DeviceScreenAdjustObstacles extends StatefulWidget {
   const DeviceScreenAdjustObstacles({super.key, required this.provider});

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lorawan/widgets/device_small_info.dart';
-import 'package:lorawan/widgets/disconnected_view.dart';
 import 'package:provider/provider.dart';
 
-import '../models/app_info.dart';
+import '../helpers/app_info.dart';
 import '../enum/enum_my_pages.dart';
 import '../providers/page_provider.dart';
 import '../providers/mqtt_provider.dart';
+import '../widgets/disconnected_view.dart';
 import '../widgets/my_app_bar.dart';
 import '../widgets/nav_bar_pane.dart';
 import '../providers/device_provider.dart';
@@ -62,10 +61,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Tooltip(
           message: getPageString(buttonPage),
           decoration: const BoxDecoration(color: Colors.transparent),
-          textStyle: const TextStyle(
-            color: Colors.black,
-            fontSize: 15,
-          ),
+          textStyle: const TextStyle(color: Colors.black, fontSize: 15),
           child: child,
         ),
       ),
@@ -93,15 +89,10 @@ class _MainScreenState extends State<MainScreen> {
                 final appBarHeight = appHeight < 850
                     ? 850 * 0.075
                     : appHeight * 0.075;
-
-                if (appHeight < 50) return const Center();
-                if (appWidth < 600 || appHeight < 550) {
-                  return DeviceSmallInfo(appWidth: appWidth, appHeight: appHeight);
-                }
                 return Column(
                   children: [
                     Container(
-                      color: AppInfo.appPrimaryColor,
+                      color: AppInfo.opaquePrimaryColor(0.95),
                       width: appWidth,
                       height: appBarHeight,
                       child: MyAppBar(

@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-import '../models/app_info.dart';
+import '../helpers/app_info.dart';
 import '../enum/enum_chart_metrics.dart';
 import '../providers/device_provider.dart';
 
@@ -64,13 +64,32 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
   Widget build(BuildContext context) {
     final chartData = getMetricData(widget.provider);
 
-    final yValues = chartData.map((e) => e.value);
-    final minY = yValues.isEmpty
-        ? 0.0
-        : yValues.reduce((a, b) => a < b ? a : b) - 1;
-    final maxY = yValues.isEmpty
-        ? 10.0
-        : yValues.reduce((a, b) => a > b ? a : b) + 1;
+    if (chartData.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(24.0),
+        child: Center(
+          child: Text(
+            'No data available',
+            style: TextStyle(fontSize: 18, color: Colors.grey),
+          ),
+        ),
+      );
+    }
+
+    final yValues = chartData.map((e) => e.value).toList();
+    final minDataY = yValues.reduce((a, b) => a < b ? a : b);
+    final maxDataY = yValues.reduce((a, b) => a > b ? a : b);
+    final range = (maxDataY - minDataY).abs();
+
+    final buffer = range < 5 ? 2.5 : range * 0.1;
+    final minY = minDataY - buffer;
+    final maxY = maxDataY + buffer;
+
+    final yInterval = ((maxY - minY) / 5).clamp(0.5, 20.0);
+    final verticalInterval = (chartData.length / 12).ceilToDouble().clamp(
+      1.0,
+      double.infinity,
+    );
 
     return Column(
       children: [
@@ -137,12 +156,13 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                   _selectedMetric.label,
                   style: const TextStyle(
                     fontSize: 16,
+                    color: AppInfo.appPrimaryColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               SizedBox(
-                height: 250,
+                height: 280,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: LineChart(
@@ -152,15 +172,14 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                       gridData: FlGridData(
                         show: true,
                         drawVerticalLine: true,
-                        horizontalInterval: ((maxY - minY) / 10).ceilToDouble(), // Y-axis: ~5 horizontal lines
-                        verticalInterval: (chartData.length / 12).ceilToDouble(), // X-axis: ~6 vertical lines
+                        horizontalInterval: yInterval,
+                        verticalInterval: verticalInterval,
                       ),
                       titlesData: FlTitlesData(
                         bottomTitles: AxisTitles(
                           sideTitles: SideTitles(
                             showTitles: true,
-                            interval: (chartData.length / 12).ceilToDouble(),
-                            // interval: ,
+                            interval: verticalInterval,
                             getTitlesWidget: (value, _) {
                               final i = value.toInt();
                               return Text(
@@ -176,9 +195,9 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                           sideTitles: SideTitles(
                             showTitles: true,
                             reservedSize: 36,
-                            interval: 10,
+                            interval: yInterval,
                             getTitlesWidget: (value, _) => Text(
-                              value.toStringAsFixed(0),
+                              value.toStringAsFixed(1),
                               style: const TextStyle(fontSize: 10),
                             ),
                           ),
@@ -193,8 +212,8 @@ class _DeviceScreenChartViewState extends State<DeviceScreenChartView> {
                       borderData: FlBorderData(
                         show: true,
                         border: const Border(
-                          left: BorderSide(color: Colors.grey),
-                          bottom: BorderSide(color: Colors.grey),
+                          left: BorderSide(color: AppInfo.appPrimaryColor),
+                          bottom: BorderSide(color: AppInfo.appPrimaryColor),
                         ),
                       ),
                       lineTouchData: LineTouchData(

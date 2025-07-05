@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../widgets/device_screen_adjust_obstacles.dart';
 import '../widgets/device_screen_gauge_view.dart';
-import '../models/app_info.dart';
 import '../widgets/device_screen_chart_view.dart';
 import '../providers/device_provider.dart';
 
@@ -15,24 +14,6 @@ class DeviceScreen<T extends DeviceProvider> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: SafeArea(
-          child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              deviceName,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30.0,
-                letterSpacing: 3.0,
-                color: AppInfo.appPrimaryColor,
-              ),
-            ),
-          ),
-        ),
-      ),
       body: Consumer<T>(
         builder: (context, provider, _) {
           final decodedPayload =
@@ -48,7 +29,7 @@ class DeviceScreen<T extends DeviceProvider> extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 /// Gauges
-                const SizedBox(height: 20),
+                const SizedBox(height: 50),
                 DeviceScreenGaugeView(
                   pathLoss: pathLoss,
                   decodedPayload: decodedPayload,
@@ -63,6 +44,7 @@ class DeviceScreen<T extends DeviceProvider> extends StatelessWidget {
 
                 /// Adjust Obstacle Parameters
                 DeviceScreenAdjustObstacles(provider: provider),
+                const SizedBox(height: 50),
               ],
             ),
           );

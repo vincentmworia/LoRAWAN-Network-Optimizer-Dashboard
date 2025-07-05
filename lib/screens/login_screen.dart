@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/app_info.dart';
-import '../widgets/device_small_info.dart';
+import '../helpers/app_info.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -53,14 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final appWidth = MediaQuery.of(context).size.width;
-    final appHeight = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: (appHeight < 50)
-          ? const Center()
-          : (appWidth < 600 || appHeight < 550)
-          ? DeviceSmallInfo(appWidth: appWidth, appHeight: appHeight)
-          : Stack(
+      body:  Stack(
               fit: StackFit.expand,
               children: [
                 Image.asset('assets/images/Lora.webp', fit: BoxFit.cover),

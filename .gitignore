@@ -46,3 +46,4 @@ app.*.map.json
 
 # Mqtt info
 /lib/private_info.dart
+.env
