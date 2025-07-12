@@ -3,7 +3,12 @@ import 'dart:math';
 class PathLossComputation {
   // todo later access data from machine learning model or local server;
 
-  static num estimatePathLossNahshon(num rssi) => 14 - 0.14 + 0.4 + 3 - rssi;
+  static num estimatePathLossObiri( {
+    required num rssi,
+    required num distance, // meters
+    required num cWalls, // number of concrete walls
+    required num wWalls, // number of wooden walls
+  }) => 14 - 0.14 * distance + 0.4 * cWalls + 3 * wWalls - rssi;
 
   static num estimatePathLossVincent({
     required num distance, // meters

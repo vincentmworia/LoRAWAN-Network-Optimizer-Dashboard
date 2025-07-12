@@ -91,8 +91,11 @@ class DeviceProvider with ChangeNotifier {
       snr: rxMetadata.snr ?? 0,
       frequency: num.parse(settings.frequency ?? '0'),
     ); */
-    _pathLoss = PathLossComputation.estimatePathLossNahshon(
-      rxMetadata.rssi ?? 0.0,
+    _pathLoss = PathLossComputation.estimatePathLossObiri(
+      rssi: rxMetadata.rssi ?? 0.0,
+      cWalls: cWalls,
+      distance: distance,
+      wWalls: wWalls,
     );
 
     final bandwidth = DeviceCard.freqCalculator(settings.bandwidth)!['value'];
